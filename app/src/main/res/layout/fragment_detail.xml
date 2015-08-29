@@ -51,7 +51,7 @@
                 android:textAlignment="center"
                 android:shadowDx="@integer/overview_textshadow_dx"
                 android:shadowDy="@integer/overview_textshadow_dy"
-                android:shadowRadius="integer/overview_textshadow_radius"
+                android:shadowRadius="@integer/overview_textshadow_radius"
                 android:textColor="@color/overview_text"
                 android:textSize="@dimen/text_size" />
 
