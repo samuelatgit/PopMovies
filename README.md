@@ -1,3 +1,5 @@
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
+
 # PopMovies
 
 Query popular movies information from http://themoviedb.org
