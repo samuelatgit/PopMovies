@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="overview_textshadow_dx">2</integer>
+    <integer name="overview_textshadow_dy">2</integer>
+    <integer name="overview_textshadow_radius">5</integer>
+</resources>
