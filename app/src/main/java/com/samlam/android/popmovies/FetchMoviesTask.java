@@ -1,11 +1,14 @@
 package com.samlam.android.popmovies;
 
 import android.content.Context;
+import android.graphics.Movie;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,10 +29,15 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<MovieModel>> {
     @Override
     protected List<MovieModel> doInBackground(String... params) {
         try{
-            return _dataProvider.GetPopularMovies(params[0]);
+            if (ContextHelper.IsNetworkConnected(_context))
+                return _dataProvider.GetPopularMovies(params[0]);
+            else{
+                //TODO: return cache data here
+                return new ArrayList<MovieModel>();
+            }
         }catch(JSONException e){
-            Log.e(LOG_TAG, "Error ", e);
-            return null;
+            Log.e(LOG_TAG + ".doInBackground()", "Error when fetching movies", e);
+            return new ArrayList<MovieModel>();
         }
     }
 
@@ -37,5 +45,9 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<MovieModel>> {
     protected void onPostExecute(List<MovieModel> movieModels) {
         super.onPostExecute(movieModels);
         _adapter.setList(movieModels);
+        if (movieModels.isEmpty()) {
+            Toast.makeText(_context, "No movie data returned, please check your Internet connection",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }

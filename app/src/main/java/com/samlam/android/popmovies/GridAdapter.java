@@ -2,6 +2,7 @@ package com.samlam.android.popmovies;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -17,6 +18,7 @@ import java.util.List;
  * Created by slam on 8/29/2015.
  */
 public class GridAdapter extends BaseAdapter {
+    private final String LOGTAG = this.getClass().getName();
     private Context mContext;
     private List<MovieModel> _movieList = new ArrayList<MovieModel>();
     private Point screenSize = new Point();
@@ -82,6 +84,7 @@ public class GridAdapter extends BaseAdapter {
 
         String image_url = movie.BaseUrl() + movie.getImage();
 
+        Log.v(LOGTAG + ".getView()", "image url " + image_url);
         Picasso.with(mContext).load(image_url).into(view);
 
         return view;

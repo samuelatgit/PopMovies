@@ -23,6 +23,7 @@ import java.util.List;
 public class TheMovieDbOrgProvider implements IMovieDataProvider {
     final String BASE_URL = "http://api.themoviedb.org/3/discover/movie";
     private String _apikey ;
+    private String LOGTAG = this.getClass().getName();
 
     public TheMovieDbOrgProvider(String apikey){
         _apikey = apikey;
@@ -61,7 +62,7 @@ public class TheMovieDbOrgProvider implements IMovieDataProvider {
     public String Get(String urlString) {
         try {
             URL url = new URL(urlString);
-            Log.v(this.getClass().getName(), "server URI " + urlString);
+            Log.v(LOGTAG + ".Get()", "server URI " + urlString);
 
             OkHttpClient client = new OkHttpClient();
 
@@ -73,13 +74,15 @@ public class TheMovieDbOrgProvider implements IMovieDataProvider {
             return response.body().string();
 
         } catch (IOException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
+            Log.e(LOGTAG + ".Get()", "Error when connecting url " + urlString, e);
             return null;
         }
     }
 
     public static List<MovieModel> Map(String json) throws JSONException{
         List<MovieModel> ret = new ArrayList<MovieModel>();
+        if (ContextHelper.IsStringNullOrEmpty(json)) return ret;
+
         JSONObject movieJson = new JSONObject(json);
         JSONArray jsonMovies = movieJson.getJSONArray("results");
 

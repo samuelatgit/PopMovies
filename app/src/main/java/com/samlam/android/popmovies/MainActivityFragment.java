@@ -93,6 +93,12 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        updateMovies(POPULARITY);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //return inflater.inflate(R.layout.fragment_main, container, false);
@@ -110,6 +116,7 @@ public class MainActivityFragment extends Fragment {
                                     int position, long id) {
                 MainActivityFragment.SelectedMovie = _adapter.getItem(position);
                 Intent intent = new Intent(getActivity(), DetailActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         .putExtra(Intent.EXTRA_TITLE, MainActivityFragment.SelectedMovie.getTitle());
                 startActivity(intent);
 //                Toast.makeText(getView().getContext(), "" + position,
@@ -117,7 +124,7 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        updateMovies(POPULARITY);
+
 
         return _rootView;
     }
@@ -134,7 +141,9 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void updateMovies(String sort_by) {
-        new FetchMoviesTask(getActivity(), new TheMovieDbOrgProvider(getResources().getString(R.string.moviedb_apikey) ), _adapter ).execute(sort_by);
+        if (_adapter != null || _adapter.getCount()==0) {
+            new FetchMoviesTask(getActivity(), new TheMovieDbOrgProvider(getResources().getString(R.string.moviedb_apikey)), _adapter).execute(sort_by);
+        }
     }
 }
 
