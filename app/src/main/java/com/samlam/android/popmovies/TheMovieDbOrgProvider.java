@@ -34,10 +34,14 @@ public class TheMovieDbOrgProvider implements IMovieDataProvider {
         //http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
         Calendar calendar = Calendar.getInstance();
 
+        String today = String.valueOf(calendar.get(Calendar.YEAR)) + "-" +
+                String.valueOf(calendar.get(Calendar.MONTH)) + "-" +
+                String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("api_key", _apikey)
                 .appendQueryParameter("sort_by", sorting + ".desc")
-                .appendQueryParameter("primary_release_date.lte",String.valueOf( calendar.get(Calendar.DATE)))
+                .appendQueryParameter("primary_release_date.lte", today)
                 .appendQueryParameter("primary_release_year",String.valueOf(calendar.get(Calendar.YEAR)))
                 .build();
         String urlString = builtUri.toString();

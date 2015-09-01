@@ -119,12 +119,8 @@ public class MainActivityFragment extends Fragment {
                         .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         .putExtra(Intent.EXTRA_TITLE, MainActivityFragment.SelectedMovie.getTitle());
                 startActivity(intent);
-//                Toast.makeText(getView().getContext(), "" + position,
-//                        Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
         return _rootView;
     }
@@ -134,7 +130,7 @@ public class MainActivityFragment extends Fragment {
         if (!_sortBy.contentEquals(POPULARITY)) {
             outState.putString(SORTSETTING, _sortBy);
         }
-//        if (mMovies != null) {
+//        if ( != null) {
 //            outState.putParcelableArrayList(MOVIES_KEY, mMovies);
 //        }
         super.onSaveInstanceState(outState);

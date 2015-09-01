@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GridAdapter extends BaseAdapter {
     private final String LOGTAG = this.getClass().getName();
-    private Context mContext;
+    private Context _context;
     private List<MovieModel> _movieList = new ArrayList<MovieModel>();
     private Point screenSize = new Point();
 
@@ -28,7 +28,7 @@ public class GridAdapter extends BaseAdapter {
     }
 
     public GridAdapter(Context c) {
-        mContext = c;
+        _context = c;
     }
 
     public List<MovieModel> setList(List<MovieModel> data){
@@ -71,9 +71,9 @@ public class GridAdapter extends BaseAdapter {
 
         ImageView view = (ImageView) convertView;
         if (view == null) {
-            view = new ImageView(mContext);
+            view = new ImageView(_context);
             view.setLayoutParams( new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
-            view.getLayoutParams().height= getViewHeight();
+            view.getLayoutParams().height= (int) _context.getResources().getDimension(R.dimen.grid_poster_height); //getViewHeight();
             view.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         //String url = getItem(position);
@@ -85,14 +85,14 @@ public class GridAdapter extends BaseAdapter {
         String image_url = movie.BaseUrl() + movie.getImage();
 
         Log.v(LOGTAG + ".getView()", "image url " + image_url);
-        Picasso.with(mContext).load(image_url).into(view);
+        Picasso.with(_context).load(image_url).into(view);
 
         return view;
     }
 
     private int getViewHeight(){
         if (screenSize.y == 0)
-            ContextHelper.getDisplay(mContext).getSize(screenSize);
+            ContextHelper.getDisplay(_context).getSize(screenSize);
         return screenSize.y /2;
     }
 
