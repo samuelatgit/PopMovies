@@ -92,7 +92,7 @@ public class GridAdapter extends BaseAdapter {
 
     private int getViewHeight(){
         if (screenSize.y == 0)
-            ContextHelper.getDisplay(_context).getSize(screenSize);
+            ContextHelper.GetDisplay(_context).getSize(screenSize);
         return screenSize.y /2;
     }
 
