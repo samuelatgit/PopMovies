@@ -2,6 +2,7 @@ package com.samlam.android.popmovies;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,13 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 
 /**
  * Created by slam on 8/29/2015.
@@ -27,8 +31,17 @@ public class GridAdapter extends BaseAdapter {
         return _movieList;
     }
 
+    public String MovieListInJson(){
+        return new Gson().toJson(MovieList());
+    }
+
     public GridAdapter(Context c) {
         _context = c;
+    }
+
+    public List<MovieModel> setListFromJson(String jsonStr){
+        MovieModel[] tmp = new Gson().fromJson(jsonStr, MovieModel[].class);
+        return setList( Arrays.asList(tmp));
     }
 
     public List<MovieModel> setList(List<MovieModel> data){
@@ -51,23 +64,6 @@ public class GridAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-//        ImageView imageView;
-//        if (convertView == null) {
-//            // if it's not recycled, initialize some attributes
-//            imageView = new ImageView(mContext);
-//            //imageView.setLayoutParams(new GridView.LayoutParams(120,360));
-//            imageView.setLayoutParams(new GridView.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setPadding(0, 0, 0, 0);
-//        } else {
-//            imageView = (ImageView) convertView;
-//        }
-//
-//        imageView.setImageResource(mThumbIds[position]);
-
-        //http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
-
 
         ImageView view = (ImageView) convertView;
         if (view == null) {
@@ -82,10 +78,12 @@ public class GridAdapter extends BaseAdapter {
 
         final MovieModel movie = getItem(position);
 
-        String image_url = movie.BaseUrl() + movie.getImage();
-
-        Log.v(LOGTAG + ".getView()", "image url " + image_url);
-        Picasso.with(_context).load(image_url).into(view);
+        String img = movie.getImage();
+        if (img != null && !img.isEmpty()) {
+            String image_url = movie.BaseUrl() + movie.getImage();
+            Log.v(LOGTAG + ".getView()", "image url " + image_url);
+            Picasso.with(_context).load(image_url).into(view);
+        }
 
         return view;
     }

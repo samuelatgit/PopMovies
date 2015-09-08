@@ -65,4 +65,5 @@ public class MovieModel {
     public void BaseUrl(String value){
         baseUrl = value;
     }
+
 }

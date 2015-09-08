@@ -1,14 +1,10 @@
 package com.samlam.android.popmovies;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,7 +15,8 @@ import android.widget.GridView;
  */
 public class MainActivityFragment extends Fragment {
 
-    private final String SORTSETTING = "sortsetting";
+    private final String MOVIE_LIST = "movieList";
+    private final String SORT_SETTING = "sortSetting";
     private final String POPULARITY = "popularity";
     private final String RATING = "vote_average";
     private View _rootView;
@@ -32,78 +29,27 @@ public class MainActivityFragment extends Fragment {
     public MainActivityFragment() {
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_main, menu);
-//
-//        MenuItem action_sort_by_popularity = menu.findItem(R.id.action_sort_by_popularity);
-//        MenuItem action_sort_by_rating = menu.findItem(R.id.action_sort_by_rating);
-//
-//        if (_sortBy.contentEquals(POPULARITY)) {
-//            if (!action_sort_by_popularity.isChecked()) {
-//                action_sort_by_popularity.setChecked(true);
-//            }
-//        } else if (_sortBy.contentEquals(RATING)) {
-//            if (!action_sort_by_rating.isChecked()) {
-//                action_sort_by_rating.setChecked(true);
-//            }
-//        }
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        //return super.onOptionsItemSelected(item);
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.action_sort_by_popularity:
-//                if (item.isChecked()) {
-//                    item.setChecked(false);
-//                } else {
-//                    item.setChecked(true);
-//                }
-//                _sortBy = POPULARITY;
-//                ContextHelper.GetEditor(getActivity().getBaseContext()).putString(ContextHelper.SORTING_KEY,_sortBy);
-//                ContextHelper.GetEditor(getActivity()).apply();
-//                updateMovies(_sortBy);
-//                return true;
-//            case R.id.action_sort_by_rating:
-//                if (item.isChecked()) {
-//                    item.setChecked(false);
-//                } else {
-//                    item.setChecked(true);
-//                }
-//                _sortBy = RATING;
-//                ContextHelper.GetEditor(getActivity().getBaseContext()).putString(ContextHelper.SORTING_KEY,_sortBy);
-//                ContextHelper.GetEditor(getActivity()).apply();
-//                updateMovies(_sortBy);
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         //getActivity().setContentView(R.layout.fragment_main);
+        _adapter = (_adapter == null)? new GridAdapter(getActivity()): _adapter;
         if (savedInstanceState != null){
-            String test = savedInstanceState.getString(SORTSETTING);
+            String listJson = savedInstanceState.getString(MOVIE_LIST);
+            _adapter.setListFromJson(listJson);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Context ctx = getActivity();
-        _sortBy = getPreference(R.string.pref_sort_by,POPULARITY);
-        updateMovies(_sortBy);
+        String sort = getPreference(R.string.pref_sort_by,POPULARITY);
+        if (_sortBy != sort || _adapter.getCount() == 0) {
+            _sortBy = sort;
+            updateMovies(_sortBy);
+        }
     }
 
     @Override
@@ -113,7 +59,7 @@ public class MainActivityFragment extends Fragment {
 
         _rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        _adapter = new GridAdapter(inflater.getContext());
+        _adapter = (_adapter == null)? new GridAdapter(inflater.getContext()): _adapter;
 
         GridView gridView = (GridView) _rootView.findViewById(R.id.gridview);
 
@@ -137,11 +83,11 @@ public class MainActivityFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         _sortBy = getPreference(R.string.pref_sort_by, POPULARITY);
         if (!_sortBy.contentEquals(POPULARITY)) {
-            outState.putString(SORTSETTING, _sortBy);
+            outState.putString(SORT_SETTING, _sortBy);
         }
-//        if ( != null) {
-//            outState.putParcelableArrayList(MOVIES_KEY, mMovies);
-//        }
+        if (_adapter != null){
+            outState.putString(MOVIE_LIST, _adapter.MovieListInJson());
+        }
         super.onSaveInstanceState(outState);
     }
 
